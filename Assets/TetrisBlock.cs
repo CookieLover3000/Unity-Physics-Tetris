@@ -15,7 +15,7 @@ public class TetrisBlock : MonoBehaviour
     private GameOverScript _gameOver;
 
     // limit of map. Needed because collision is whack.
-    private float sideLimit = 21f / 2f;
+    private readonly float _sideLimit = 21f / 2f;
 
     // enum for cheap state machine
     private enum BlockState
@@ -59,16 +59,24 @@ public class TetrisBlock : MonoBehaviour
             transform.position += new Vector3(-1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > sideLimit)
-                transform.position = new Vector3(-1f * sideLimit + 0.5f, transform.position.y , 0);
+            if (Mathf.Abs(transform.position.x) > _sideLimit)
+            {
+                // Rider says this is more efficient
+                Transform blockTransform = transform;
+                blockTransform.position = new Vector3(-1f * _sideLimit + 0.5f, blockTransform.position.y , 0);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             transform.position += new Vector3(1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > sideLimit)
-                transform.position = new Vector3(sideLimit - 0.5f, transform.position.y , 0);
+            if (Mathf.Abs(transform.position.x) > _sideLimit)
+            {
+                // Rider says this is more efficient
+                Transform blockTransform = transform;
+                blockTransform.position = new Vector3(_sideLimit - 0.5f, blockTransform.position.y , 0);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow)) 
         {

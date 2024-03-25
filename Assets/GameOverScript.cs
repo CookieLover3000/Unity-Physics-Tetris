@@ -36,7 +36,7 @@ public class GameOverScript : MonoBehaviour
         GameOver = true;
         // enable texts
         foreach (var text in texts)
-        text.gameObject.SetActive(true);
+            text.gameObject.SetActive(true);
         
     }
 
