@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class SpawningScript : MonoBehaviour
 {
     [SerializeField] private GameObject[] tetrominoes;
+    public bool newTetromino;
     
     void Start()
     {
