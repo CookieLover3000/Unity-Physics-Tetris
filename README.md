@@ -1,6 +1,6 @@
 # Unity Tetris Game
 
-This is a simple tetris game made in unity for a school course.
+This is a simple physics based Tetris game made in unity for a school course.
 
 ### Controls
 

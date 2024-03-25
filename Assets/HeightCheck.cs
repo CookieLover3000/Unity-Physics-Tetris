@@ -3,9 +3,13 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/*
+ * This script handles the movement of the camera when the blocks get too high
+ */
 public class HeightCheck : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private float timeToMoveCamera = 2f;
+    
     private Camera _cam;
     private Collider2D _triggerbox;
     private float _timer;
@@ -15,17 +19,25 @@ public class HeightCheck : MonoBehaviour
         _triggerbox = GetComponent<Collider2D>();
         _triggerbox.isTrigger = true;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
+        // used chatgpt to help me figure out how to get the center of the camera and move the camera up.
+        // https://chat.openai.com/share/827b1601-9ce0-42bb-a25d-6516f945b19f
+        
+        // get center of the camera
         Vector3 center = _cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, _cam.nearClipPlane));
+        
+        // if this is true the blocks are too high and the camera should move up.
+        // has a value of 0.5f because blocks take a shorter time than that to move through the trigger.
         if (_timer > 0.5f)
         {
             _timer = 0f;
+            // center of new camera position
             Vector3 newCenter = new Vector3(center.x, center.y + 2f, center.z);
-            // _cam.transform.position += difference;
-            StartCoroutine(MoveCameraSmoothly(_cam.transform.position, newCenter, 2f));
+            
+            // smoothly move camera up.
+            StartCoroutine(MoveCameraSmoothly(_cam.transform.position, newCenter, timeToMoveCamera));
 
         }
     }
@@ -50,22 +62,19 @@ public class HeightCheck : MonoBehaviour
         _cam.transform.position = endPos;
     }
     
+    // trigger callbacks
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("GameObject1 collided with " + col.name);
         _timer += Time.deltaTime;
-        Debug.Log(_timer);
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
         _timer += Time.deltaTime;
-        Debug.Log(_timer);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("reset timer");
         _timer = 0f;
     }
 }

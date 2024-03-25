@@ -2,26 +2,20 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+/*
+ * Script is used for creating new Tetromino
+ */
 public class SpawningScript : MonoBehaviour
 {
     [SerializeField] private GameObject[] tetrominoes;
-    [SerializeField] private bool a;
     
-    // Start is called before the first frame update
     void Start()
     {
+        // Create a Tetromino at the start of the game
         NewTetromino();
     }
 
-    private void Update()
-    {
-        if (a)
-        {
-            a = false;
-            NewTetromino();
-        }
-    }
-
+    // Create a random Tetromino
     public void NewTetromino()
     {
         Instantiate(tetrominoes[Random.Range(0, tetrominoes.Length)], transform.position, Quaternion.identity);
