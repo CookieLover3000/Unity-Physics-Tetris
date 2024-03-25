@@ -9,6 +9,7 @@ using UnityEngine;
 public class HeightCheck : MonoBehaviour
 {
     [SerializeField] private float timeToMoveCamera = 2f;
+    [SerializeField] private float moveCameraDelay = 0.6f;
     
     private Camera _cam;
     private Collider2D _triggerbox;
@@ -22,6 +23,7 @@ public class HeightCheck : MonoBehaviour
     
     void Update()
     {
+        Debug.Log("timer: " + _timer);
         // used chatgpt to help me figure out how to get the center of the camera and move the camera up.
         // https://chat.openai.com/share/827b1601-9ce0-42bb-a25d-6516f945b19f
         
@@ -29,8 +31,8 @@ public class HeightCheck : MonoBehaviour
         Vector3 center = _cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, _cam.nearClipPlane));
         
         // if this is true the blocks are too high and the camera should move up.
-        // has a value of 0.5f because blocks take a shorter time than that to move through the trigger.
-        if (_timer > 0.5f)
+        // has a value of 0.6f because blocks take a shorter time than that to move through the trigger.
+        if (_timer > moveCameraDelay)
         {
             _timer = 0f;
             // center of new camera position
