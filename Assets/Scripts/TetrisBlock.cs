@@ -26,6 +26,11 @@ public class TetrisBlock : MonoBehaviour
         Done
     }
     private BlockState State { get; set; } = BlockState.Holding;
+    
+     
+    // Observer
+    public delegate void BlockHasLanded();
+    public static BlockHasLanded OnBlockHasLanded;
 
     void Start()
     {
@@ -43,13 +48,19 @@ public class TetrisBlock : MonoBehaviour
     {
         // game is over cannot drop more blocks
         if (_gameOver.GameOver)
+        {
+            // remove the script from the block as it isn't necessary anymore. Saves some if checks
+            TetrisBlock script = GetComponent<TetrisBlock>();
+            Destroy(script);
             return;
-        
+        }
+
         // block has fallen and can't get up
         if (State == BlockState.Done)
         {
             // remove the script from the block as it isn't necessary anymore. Saves some if checks
             TetrisBlock script = GetComponent<TetrisBlock>();
+            Debug.Log("hi");
             Destroy(script);
             return;
         }
@@ -96,6 +107,8 @@ public class TetrisBlock : MonoBehaviour
             // spawn a new Tetromino
             State = BlockState.Done;
             _spawn.NewTetromino();
+            OnBlockHasLanded?.Invoke();
+            
         }
     }
 

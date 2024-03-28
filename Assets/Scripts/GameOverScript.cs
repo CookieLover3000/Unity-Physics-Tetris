@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
  */
 public class GameOverScript : MonoBehaviour
 {
+    
     public bool GameOver { get; private set; }
     
     // text objects for displaying game over text

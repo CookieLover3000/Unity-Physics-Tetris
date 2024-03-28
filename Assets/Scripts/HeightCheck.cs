@@ -21,7 +21,6 @@ public class HeightCheck : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("timer: " + _timer);
         // used chatgpt to help me figure out how to get the center of the camera and move the camera up.
         // https://chat.openai.com/share/827b1601-9ce0-42bb-a25d-6516f945b19f
         
