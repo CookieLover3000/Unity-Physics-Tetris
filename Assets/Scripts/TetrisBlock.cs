@@ -28,7 +28,7 @@ public class TetrisBlock : MonoBehaviour
     private BlockState State { get; set; } = BlockState.Holding;
     
      
-    // Observer
+    // Observer. this class is the subject, ScoreSystem is the observer
     public delegate void BlockHasLanded();
     public static BlockHasLanded OnBlockHasLanded;
 

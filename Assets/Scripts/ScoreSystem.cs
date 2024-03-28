@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ScoreSystem : MonoBehaviour
 {
+    // observer. increeases score when a block lands on the platform or on another block.
     private int _score;
     [SerializeField] private TMP_Text _scoreDisplay;
     
