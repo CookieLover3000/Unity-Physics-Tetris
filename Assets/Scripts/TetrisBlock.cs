@@ -15,7 +15,7 @@ public class TetrisBlock : MonoBehaviour
     private GameOverScript _gameOver;
 
     // limit of map. Needed because collision is whack.
-    private float sideLimit = 21f / 2f;
+    private readonly float _sideLimit = 21f / 2f;
     
     // get the spawner game object
     private GameObject _spawner;
@@ -80,10 +80,10 @@ public class TetrisBlock : MonoBehaviour
             transform.position += new Vector3(-1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > sideLimit)
+            if (Mathf.Abs(transform.position.x) > _sideLimit)
             {
                 Transform blockTransform = transform;
-                blockTransform.position = new Vector3(-1f * sideLimit + 0.5f, blockTransform.position.y , 0);
+                blockTransform.position = new Vector3(-1f * _sideLimit + 0.5f, blockTransform.position.y , 0);
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -91,10 +91,10 @@ public class TetrisBlock : MonoBehaviour
             transform.position += new Vector3(1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > sideLimit)
+            if (Mathf.Abs(transform.position.x) > _sideLimit)
             {
                 Transform blockTransform = transform;
-                blockTransform.position = new Vector3(sideLimit - 0.5f, blockTransform.position.y , 0);
+                blockTransform.position = new Vector3(_sideLimit - 0.5f, blockTransform.position.y , 0);
             }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow)) 
@@ -119,7 +119,6 @@ public class TetrisBlock : MonoBehaviour
         {
             // remove the script from the block as it isn't necessary anymore. Saves some if checks
             TetrisBlock script = GetComponent<TetrisBlock>();
-            Debug.Log("hi");
             Destroy(script);
         }
         
