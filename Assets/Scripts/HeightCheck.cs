@@ -21,9 +21,6 @@ public class HeightCheck : MonoBehaviour
     
     void Update()
     {
-        // used chatgpt to help me figure out how to get the center of the camera and move the camera up.
-        // https://chat.openai.com/share/827b1601-9ce0-42bb-a25d-6516f945b19f
-        
         // get center of the camera
         Vector3 center = _cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, _cam.nearClipPlane));
         
@@ -32,10 +29,9 @@ public class HeightCheck : MonoBehaviour
         if (_timer > moveCameraDelay)
         {
             _timer = 0f;
-            // center of new camera position
             Vector3 newCenter = new Vector3(center.x, center.y + 2f, center.z);
             
-            // smoothly move camera up.
+            // move camera up.
             StartCoroutine(MoveCameraSmoothly(_cam.transform.position, newCenter, timeToMoveCamera));
 
         }
@@ -47,13 +43,10 @@ public class HeightCheck : MonoBehaviour
 
         while (elapsedTime < time)
         {
-            // Incrementally move towards the target position using slerp
             _cam.transform.position = Vector3.Slerp(startPos, endPos, elapsedTime / time);
             
-            // Update elapsed time
             elapsedTime += Time.deltaTime;
-
-            // Wait for the next frame
+            
             yield return null;
         }
 

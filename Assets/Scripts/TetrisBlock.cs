@@ -15,7 +15,10 @@ public class TetrisBlock : MonoBehaviour
     private GameOverScript _gameOver;
 
     // limit of map. Needed because collision is whack.
-    private readonly float _sideLimit = 21f / 2f;
+    private float sideLimit = 21f / 2f;
+    
+    // get the spawner game object
+    private GameObject _spawner;
 
     // enum for cheap state machine
     private enum BlockState
@@ -34,6 +37,7 @@ public class TetrisBlock : MonoBehaviour
 
     void Start()
     {
+        _spawner = GameObject.Find("Spawner");
         // initialize objects
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;
@@ -49,32 +53,37 @@ public class TetrisBlock : MonoBehaviour
         // game is over cannot drop more blocks
         if (_gameOver.GameOver)
         {
-            // remove the script from the block as it isn't necessary anymore. Saves some if checks
-            TetrisBlock script = GetComponent<TetrisBlock>();
-            Destroy(script);
+            // remove the script from the block as it isn't necessary anymore.
+            Destroy(this);
             return;
         }
+        
+        HandleInputs();
+        StateMachine();
+    }
 
-        // block has fallen and can't get up
-        if (State == BlockState.Done)
-        {
-            // remove the script from the block as it isn't necessary anymore. Saves some if checks
-            TetrisBlock script = GetComponent<TetrisBlock>();
-            Debug.Log("hi");
-            Destroy(script);
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // if collision is with wall. don't switch state
+        if(collision.contacts.All(contact => contact.normal == Vector2.right || contact.normal == Vector2.left))
             return;
-        }
+        
+        // switch state because block has landed
+        if(State != BlockState.Done)
+            State = BlockState.Landed;
+    }
 
+    private void HandleInputs()
+    {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.position += new Vector3(-1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > _sideLimit)
+            if (Mathf.Abs(transform.position.x) > sideLimit)
             {
-                // Rider says this is more efficient
                 Transform blockTransform = transform;
-                blockTransform.position = new Vector3(-1f * _sideLimit + 0.5f, blockTransform.position.y , 0);
+                blockTransform.position = new Vector3(-1f * sideLimit + 0.5f, blockTransform.position.y , 0);
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -82,11 +91,10 @@ public class TetrisBlock : MonoBehaviour
             transform.position += new Vector3(1, 0, 0);
             
             // control if block is moving off the map. works together with collision on the sides of the playable area
-            if (Mathf.Abs(transform.position.x) > _sideLimit)
+            if (Mathf.Abs(transform.position.x) > sideLimit)
             {
-                // Rider says this is more efficient
                 Transform blockTransform = transform;
-                blockTransform.position = new Vector3(_sideLimit - 0.5f, blockTransform.position.y , 0);
+                blockTransform.position = new Vector3(sideLimit - 0.5f, blockTransform.position.y , 0);
             }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow)) 
@@ -101,8 +109,27 @@ public class TetrisBlock : MonoBehaviour
             // rotate the block around a point. Used https://www.youtube.com/watch?v=T5P8ohdxDjo as reference
             transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
         }
-
-        if (State == BlockState.Landed)
+    }
+    
+    // very basic statemachine
+    private void StateMachine()
+    {
+        // block has fallen and can't get up
+        if (State == BlockState.Done)
+        {
+            // remove the script from the block as it isn't necessary anymore. Saves some if checks
+            TetrisBlock script = GetComponent<TetrisBlock>();
+            Debug.Log("hi");
+            Destroy(script);
+        }
+        
+        else if (State == BlockState.Holding)
+        {
+            // makes it so the block moves up with the spawner if the player hasn't dropped it yet.
+            transform.position = new Vector3(transform.position.x, _spawner.transform.position.y, transform.position.z);
+        }
+        
+        else if (State == BlockState.Landed)
         {
             // spawn a new Tetromino
             State = BlockState.Done;
@@ -110,16 +137,5 @@ public class TetrisBlock : MonoBehaviour
             OnBlockHasLanded?.Invoke();
             
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // if collision is with wall. don't switch state
-        if(collision.contacts.All(contact => contact.normal == Vector2.right || contact.normal == Vector2.left))
-            return;
-        
-        // switch state because block has landed
-        if(State != BlockState.Done)
-            State = BlockState.Landed;
     }
 }
