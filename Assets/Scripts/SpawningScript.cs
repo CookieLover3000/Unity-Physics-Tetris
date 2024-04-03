@@ -7,9 +7,8 @@ using Random = UnityEngine.Random;
 public class SpawningScript : MonoBehaviour
 {
     [SerializeField] private GameObject[] tetrominoes;
-    public bool newTetromino;
     
-    void Start()
+    private void Start()
     {
         // Create a Tetromino at the start of the game
         NewTetromino();
@@ -19,5 +18,6 @@ public class SpawningScript : MonoBehaviour
     public void NewTetromino()
     {
         Instantiate(tetrominoes[Random.Range(0, tetrominoes.Length)], transform.position, Quaternion.identity);
+        // Instantiate(tetrominoes[2], transform.position, Quaternion.identity);
     }
 }

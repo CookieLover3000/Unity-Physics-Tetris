@@ -8,18 +8,19 @@ public class HeightCheck : MonoBehaviour
 {
     [SerializeField] private float timeToMoveCamera = 2f;
     [SerializeField] private float moveCameraDelay = 0.6f;
+    [SerializeField] private float cameraMoveRange = 4f;
     
     private Camera _cam;
     private Collider2D _triggerbox;
     private float _timer;
-    void Start()
+    private void Start()
     {
         _cam = GetComponentInParent<Camera>();
         _triggerbox = GetComponent<Collider2D>();
         _triggerbox.isTrigger = true;
     }
     
-    void Update()
+    private void Update()
     {
         // get center of the camera
         Vector3 center = _cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, _cam.nearClipPlane));
@@ -29,7 +30,7 @@ public class HeightCheck : MonoBehaviour
         if (_timer > moveCameraDelay)
         {
             _timer = 0f;
-            Vector3 newCenter = new Vector3(center.x, center.y + 2f, center.z);
+            Vector3 newCenter = new Vector3(center.x, center.y + cameraMoveRange, center.z);
             
             // move camera up.
             StartCoroutine(MoveCameraSmoothly(_cam.transform.position, newCenter, timeToMoveCamera));
@@ -37,7 +38,8 @@ public class HeightCheck : MonoBehaviour
         }
     }
     
-    IEnumerator MoveCameraSmoothly(Vector3 startPos, Vector3 endPos, float time)
+    // move camera up smoothly in timeToMoveCamera (2) seconds.
+    private IEnumerator MoveCameraSmoothly(Vector3 startPos, Vector3 endPos, float time)
     {
         float elapsedTime = 0f;
 
@@ -54,8 +56,9 @@ public class HeightCheck : MonoBehaviour
         _cam.transform.position = endPos;
     }
     
-    // trigger callbacks
-    void OnTriggerEnter2D(Collider2D col)
+    // trigger callbacks. used to see if the camera needs to move up.
+    // If a block is inside of the trigger for longer than moveCameraDelay. the camera moves up.
+    private void OnTriggerEnter2D(Collider2D col)
     {
         _timer += Time.deltaTime;
     }
@@ -65,6 +68,7 @@ public class HeightCheck : MonoBehaviour
         _timer += Time.deltaTime;
     }
 
+    // block left trigger. reset timer.
     private void OnTriggerExit2D(Collider2D other)
     {
         _timer = 0f;

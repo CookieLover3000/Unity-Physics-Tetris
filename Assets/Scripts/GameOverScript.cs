@@ -12,7 +12,7 @@ public class GameOverScript : MonoBehaviour
     
     // text objects for displaying game over text
     [SerializeField] private TMP_Text[] texts = new TMP_Text[2];
-    void Start()
+    private void Start()
     {
         // disable texts because we just started
         foreach(var text in texts)
@@ -20,7 +20,7 @@ public class GameOverScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // when game over game can be reset using the 'up arrow' key
         if (GameOver)
