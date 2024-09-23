@@ -1,6 +1,6 @@
 # Unity Tetris Game
 
-This is a simple physics based Tetris game made in unity for a school course.
+This is a simple physics based Tetris game made in unity. The goal is to stack a tower as high as possible.
 
 ### Controls
 
